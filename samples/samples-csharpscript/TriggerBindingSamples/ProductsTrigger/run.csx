@@ -10,5 +10,9 @@ using Microsoft.Azure.WebJobs.Extensions.Sql;
 
 public static void Run(IReadOnlyList<SqlChange<Product>> changes, ILogger log)
 {
-    log.LogInformation("SQL Changes: " + JsonConvert.SerializeObject(changes));
+    foreach (SqlChange<Product> change in changes)
+    {
+        // The output is used to inspect the trigger binding parameter in test methods.
+        log.LogInformation("SQL Change: " + JsonConvert.SerializeObject(change));
+    }
 }

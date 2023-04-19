@@ -13,7 +13,7 @@ import com.function.Common.SqlChangeProduct;
 import com.google.gson.Gson;
 
 import java.util.logging.Level;
-
+import java.util.logging.Logger;
 public class ProductsTrigger {
     @FunctionName("ProductsTrigger")
     public void run(
@@ -23,7 +23,11 @@ public class ProductsTrigger {
                 connectionStringSetting = "SqlConnectionString")
                 SqlChangeProduct[] changes,
             ExecutionContext context) {
-
-        context.getLogger().log(Level.INFO, "SQL Changes: " + new Gson().toJson(changes));
+        Gson gson = new Gson();
+        Logger logger = context.getLogger();
+        for (SqlChangeProduct change : changes) {
+            // The output is used to inspect the trigger binding parameter in test methods.
+            logger.log(Level.INFO, "SQL Change: " + gson.toJson(change));
+        }
     }
 }

@@ -16,8 +16,11 @@ namespace Microsoft.Azure.WebJobs.Extensions.Sql.Samples.TriggerBindingSamples
             IReadOnlyList<SqlChange<Product>> changes,
             ILogger logger)
         {
-            // The output is used to inspect the trigger binding parameter in test methods.
-            logger.LogInformation("SQL Changes: " + JsonConvert.SerializeObject(changes));
+            foreach (SqlChange<Product> change in changes)
+            {
+                // The output is used to inspect the trigger binding parameter in test methods.
+                logger.LogInformation("SQL Change: " + JsonConvert.SerializeObject(change));
+            }
         }
     }
 }

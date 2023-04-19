@@ -6,5 +6,8 @@ module.exports = async function (context, changes) {
     if (expectedMaxBatchSize && expectedMaxBatchSize != changes.length) {
         throw new Error(`Invalid max batch size, got ${changes.length} changes but expected ${expectedMaxBatchSize}`)
     }
-    context.log(`SQL Changes: ${JSON.stringify(changes)}`)
+    for (var change of changes) {
+        // The output is used to inspect the trigger binding parameter in test methods.
+        context.log(`SQL Change: ${JSON.stringify(change)}`)
+    }
 }

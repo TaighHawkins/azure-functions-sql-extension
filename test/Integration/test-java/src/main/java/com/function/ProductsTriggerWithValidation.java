@@ -12,6 +12,7 @@ import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.sql.annotation.SQLTrigger;
 
+import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class ProductsTriggerWithValidation {
@@ -28,6 +29,11 @@ public class ProductsTriggerWithValidation {
         if (expectedMaxBatchSize != null && !expectedMaxBatchSize.isEmpty() && Integer.parseInt(expectedMaxBatchSize) != changes.length) {
             throw new Exception("Invalid max batch size, got " + changes.length + " changes but expected " + expectedMaxBatchSize);
         }
-        context.getLogger().log(Level.INFO, "SQL Changes: " + new Gson().toJson(changes));
+        Gson gson = new Gson();
+        Logger logger = context.getLogger();
+        for (SqlChangeProduct change : changes) {
+            // The output is used to inspect the trigger binding parameter in test methods.
+            logger.log(Level.INFO, "SQL Change: " + gson.toJson(change));
+        }
     }
 }

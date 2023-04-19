@@ -59,4 +59,7 @@ def add_product(req: func.HttpRequest, product: func.Out[func.SqlRow]) -> func.H
                         ConnectionStringSetting="SqlConnectionString",
                         data_type=DataType.STRING)
 def products_trigger(products: str) -> None:
-    logging.info("SQL Changes: %s", json.loads(products))
+    changes = json.loads(changes)
+    for change in changes:
+        # The output is used to inspect the trigger binding parameter in test methods.
+        logging.info("SQL Change: %s", change)

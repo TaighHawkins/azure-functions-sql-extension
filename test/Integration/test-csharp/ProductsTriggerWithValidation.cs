@@ -25,8 +25,11 @@ namespace Microsoft.Azure.WebJobs.Extensions.Sql.Tests.Integration
             {
                 throw new Exception($"Invalid max batch size, got {changes.Count} changes but expected {expectedMaxBatchSize}");
             }
-            // The output is used to inspect the trigger binding parameter in test methods.
-            logger.LogInformation("SQL Changes: " + Utils.JsonSerializeObject(changes));
+            foreach (SqlChange<Product> change in changes)
+            {
+                // The output is used to inspect the trigger binding parameter in test methods.
+                logger.LogInformation("SQL Change: " + Utils.JsonSerializeObject(change));
+            }
         }
     }
 }

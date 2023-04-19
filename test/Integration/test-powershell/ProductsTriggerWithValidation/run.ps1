@@ -10,5 +10,9 @@ if ($expectedMaxBatchSize -and $expectedMaxBatchSize -ne $changes.Count) {
     throw "Invalid max batch size, got $($changes.Count) changes but expected $expectedMaxBatchSize"
 }
 
-$changesJson = $changes | ConvertTo-Json -Compress
-Write-Host "SQL Changes: $changesJson"
+foreach ($change in $changes) {
+    # The output is used to inspect the trigger binding parameter in test methods.
+    # Use -Compress to remove new lines and spaces for testing purposes.
+    $changeJson = $change | ConvertTo-Json -Compress
+    Write-Host "SQL Change: $changeJson"
+}

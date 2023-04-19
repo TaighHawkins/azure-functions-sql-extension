@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -77,7 +76,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.Sql.Tests.Integration
             Func<int, string> getName,
             Func<int, int> getCost,
             int timeoutMs,
-            string messagePrefix = "SQL Changes: ")
+            string messagePrefix = "SQL Change: ")
         {
             var expectedIds = Enumerable.Range(firstId, lastId - firstId + 1).ToHashSet();
             int index = 0;
@@ -88,22 +87,26 @@ namespace Microsoft.Azure.WebJobs.Extensions.Sql.Tests.Integration
             {
                 if (e.Data != null && (index = e.Data.IndexOf(messagePrefix, StringComparison.Ordinal)) >= 0)
                 {
-                    string json = e.Data[(index + messagePrefix.Length)..];
-                    // Sometimes we'll get messages that have extra logging content on the same line - so to prevent that from breaking
-                    // the deserialization we look for the end of the changes array and only use that.
-                    // (This is fine since we control what content is in the array so know that none of the items have a ] in them)
-                    json = json[..(json.IndexOf(']') + 1)];
-                    IReadOnlyList<SqlChange<Product>> changes;
-                    try
+                    // Sometimes we'll get multiple log messages appended together on the same line, so split them
+                    // apart here and process each one separately
+                    string[] logMessages = e.Data.Split(messagePrefix);
+                    // Skip the first one since that's all the content before the first change (timestamp + other)
+                    foreach (string logMessage in logMessages.Skip(1))
                     {
-                        changes = Utils.JsonDeserializeObject<IReadOnlyList<SqlChange<Product>>>(json);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new InvalidOperationException($"Exception deserializing JSON content. Error={ex.Message} Json=\"{json}\"", ex);
-                    }
-                    foreach (SqlChange<Product> change in changes)
-                    {
+                        string json = logMessage.Trim();
+                        // Sometimes we'll get messages that have extra logging content on the same line - so to prevent that from breaking
+                        // the deserialization we look for the end of the serialized object and only use that.
+                        json = json[..(json.LastIndexOf('}') + 1)];
+                        SqlChange<Product> change = null;
+                        try
+                        {
+                            change = Utils.JsonDeserializeObject<SqlChange<Product>>(json);
+                        }
+                        catch (Exception ex)
+                        {
+                            taskCompletion.SetException(new InvalidOperationException($"Exception deserializing JSON content. Error={ex.Message} Json=\"{json}\"", ex));
+                            return;
+                        }
                         Assert.Equal(operation, change.Operation); // Expected change operation
                         Product product = change.Item;
                         Assert.NotNull(product); // Product deserialized correctly
@@ -111,10 +114,10 @@ namespace Microsoft.Azure.WebJobs.Extensions.Sql.Tests.Integration
                         expectedIds.Remove(product.ProductId);
                         Assert.Equal(getName(product.ProductId), product.Name); // The product has the expected name
                         Assert.Equal(getCost(product.ProductId), product.Cost); // The product has the expected cost
-                    }
-                    if (expectedIds.Count == 0)
-                    {
-                        taskCompletion.SetResult(true);
+                        if (expectedIds.Count == 0)
+                        {
+                            taskCompletion.SetResult(true);
+                        }
                     }
                 }
             };
