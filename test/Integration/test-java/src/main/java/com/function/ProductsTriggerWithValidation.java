@@ -12,8 +12,7 @@ import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.sql.annotation.SQLTrigger;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import java.util.logging.*;
 
 public class ProductsTriggerWithValidation {
     @FunctionName("ProductsTriggerWithValidation")

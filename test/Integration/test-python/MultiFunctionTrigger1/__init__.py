@@ -5,4 +5,7 @@ import json
 import logging
 
 def main(changes):
-    logging.info("Trigger1 Changes: %s", json.loads(changes))
+    changes = json.loads(changes)
+    for change in changes:
+        # The output is used to inspect the trigger binding parameter in test methods.
+        logging.info("Trigger1 Change: %s", change)

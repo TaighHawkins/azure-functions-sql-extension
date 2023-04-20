@@ -15,19 +15,27 @@ namespace Microsoft.Azure.WebJobs.Extensions.Sql.Tests.Integration
         [FunctionName(nameof(MultiFunctionTrigger1))]
         public static void MultiFunctionTrigger1(
             [SqlTrigger("[dbo].[Products]", "SqlConnectionString")]
-            IReadOnlyList<SqlChange<Product>> products,
+            IReadOnlyList<SqlChange<Product>> changes,
             ILogger logger)
         {
-            logger.LogInformation("Trigger1 Changes: " + Utils.JsonSerializeObject(products));
+            foreach (SqlChange<Product> change in changes)
+            {
+                // The output is used to inspect the trigger binding parameter in test methods.
+                logger.LogInformation("Trigger1 Change: " + Utils.JsonSerializeObject(change));
+            }
         }
 
         [FunctionName(nameof(MultiFunctionTrigger2))]
         public static void MultiFunctionTrigger2(
             [SqlTrigger("[dbo].[Products]", "SqlConnectionString")]
-            IReadOnlyList<SqlChange<Product>> products,
+            IReadOnlyList<SqlChange<Product>> changes,
             ILogger logger)
         {
-            logger.LogInformation("Trigger2 Changes: " + Utils.JsonSerializeObject(products));
+            foreach (SqlChange<Product> change in changes)
+            {
+                // The output is used to inspect the trigger binding parameter in test methods.
+                logger.LogInformation("Trigger2 Change: " + Utils.JsonSerializeObject(change));
+            }
         }
     }
 }

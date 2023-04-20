@@ -12,8 +12,8 @@ import com.microsoft.azure.functions.sql.annotation.SQLTrigger;
 import com.function.Common.SqlChangeProduct;
 import com.google.gson.Gson;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
+
 public class ProductsTrigger {
     @FunctionName("ProductsTrigger")
     public void run(

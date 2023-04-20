@@ -4,5 +4,9 @@
 using namespace System.Net
 
 param($changes)
-$changesJson = $changes | ConvertTo-Json -Compress
-Write-Host "Trigger2 Changes: $changesJson"
+foreach ($change in $changes) {
+    # The output is used to inspect the trigger binding parameter in test methods.
+    # Use -Compress to remove new lines and spaces for testing purposes.
+    $changeJson = $change | ConvertTo-Json -Compress
+    Write-Host "Trigger2 Change: $changeJson"
+}

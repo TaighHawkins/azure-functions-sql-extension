@@ -12,7 +12,7 @@ import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.sql.annotation.SQLTrigger;
 
-import java.util.logging.Level;
+import java.util.logging.*;
 
 public class MultiFunctionTrigger1 {
     @FunctionName("MultiFunctionTrigger1")
@@ -23,7 +23,11 @@ public class MultiFunctionTrigger1 {
                 connectionStringSetting = "SqlConnectionString")
                 SqlChangeProduct[] changes,
             ExecutionContext context) {
-
-        context.getLogger().log(Level.INFO, "Trigger1 Changes: " + new Gson().toJson(changes));
+        Gson gson = new Gson();
+        Logger logger = context.getLogger();
+        for (SqlChangeProduct change : changes) {
+            // The output is used to inspect the trigger binding parameter in test methods.
+            logger.log(Level.INFO, "Trigger1 Change: " + gson.toJson(change));
+        }
     }
 }

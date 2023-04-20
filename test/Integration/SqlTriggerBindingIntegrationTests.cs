@@ -290,8 +290,8 @@ namespace Microsoft.Azure.WebJobs.Extensions.Sql.Tests.Integration
         [SqlInlineData()]
         public async Task MultiFunctionTriggerTest(SupportedLanguages lang)
         {
-            const string Trigger1Changes = "Trigger1 Changes: ";
-            const string Trigger2Changes = "Trigger2 Changes: ";
+            const string Trigger1Changes = "Trigger1 Change: ";
+            const string Trigger2Changes = "Trigger2 Change: ";
 
             this.SetChangeTrackingForTable("Products");
 

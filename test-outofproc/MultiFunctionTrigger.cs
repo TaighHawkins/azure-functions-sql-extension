@@ -19,21 +19,29 @@ namespace DotnetIsolatedTests
         [Function(nameof(MultiFunctionTrigger1))]
         public static void MultiFunctionTrigger1(
             [SqlTrigger("[dbo].[Products]", "SqlConnectionString")]
-            IReadOnlyList<SqlChange<Product>> products,
+            IReadOnlyList<SqlChange<Product>> changes,
             FunctionContext context)
         {
             ILogger logger = context.GetLogger("MultiFunctionTrigger1");
-            logger.LogInformation("Trigger1 Changes: " + Utils.JsonSerializeObject(products), null);
+            foreach (SqlChange<Product> change in changes)
+            {
+                // The output is used to inspect the trigger binding parameter in test methods.
+                logger.LogInformation("Trigger1 Change: " + Utils.JsonSerializeObject(change));
+            }
         }
 
         [Function(nameof(MultiFunctionTrigger2))]
         public static void MultiFunctionTrigger2(
             [SqlTrigger("[dbo].[Products]", "SqlConnectionString")]
-            IReadOnlyList<SqlChange<Product>> products,
+            IReadOnlyList<SqlChange<Product>> changes,
             FunctionContext context)
         {
-            ILogger logger = context.GetLogger("MultiFunctionTrigger1");
-            logger.LogInformation("Trigger2 Changes: " + Utils.JsonSerializeObject(products), null);
+            ILogger logger = context.GetLogger("MultiFunctionTrigger2");
+            foreach (SqlChange<Product> change in changes)
+            {
+                // The output is used to inspect the trigger binding parameter in test methods.
+                logger.LogInformation("Trigger2 Change: " + Utils.JsonSerializeObject(change));
+            }
         }
     }
 }
