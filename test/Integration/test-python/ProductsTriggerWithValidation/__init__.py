@@ -11,6 +11,7 @@ def main(changes):
     if expectedMaxBatchSize and int(expectedMaxBatchSize) != length:
         raise Exception("Invalid max batch size, got %d changes but expected %s" % (length, expectedMaxBatchSize))
     changes = json.loads(changes)
+    logging.info("SQL Changes: %d", length)
     for change in changes:
         # The output is used to inspect the trigger binding parameter in test methods.
         logging.info("SQL Change: %s", change)

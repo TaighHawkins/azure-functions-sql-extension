@@ -25,6 +25,7 @@ public class ProductsTrigger {
             ExecutionContext context) {
         Gson gson = new Gson();
         Logger logger = context.getLogger();
+        logger.log(Level.INFO, "SQL Changes: " + changes.length);
         for (SqlChangeProduct change : changes) {
             // The output is used to inspect the trigger binding parameter in test methods.
             logger.log(Level.INFO, "SQL Change: " + gson.toJson(change));

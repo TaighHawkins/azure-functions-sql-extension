@@ -4,6 +4,7 @@
 using namespace System.Net
 
 param($changes)
+Write-Host "SQL Changes: $($changes.Length)"
 foreach ($change in $changes) {
     # The output is used to inspect the trigger binding parameter in test methods.
     # Use -Compress to remove new lines and spaces for testing purposes.

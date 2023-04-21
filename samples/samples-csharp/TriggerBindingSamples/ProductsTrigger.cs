@@ -16,6 +16,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.Sql.Samples.TriggerBindingSamples
             IReadOnlyList<SqlChange<Product>> changes,
             ILogger logger)
         {
+            logger.LogInformation($"SQL Changes: {changes.Count}");
             foreach (SqlChange<Product> change in changes)
             {
                 // The output is used to inspect the trigger binding parameter in test methods.

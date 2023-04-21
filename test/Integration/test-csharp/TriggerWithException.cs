@@ -28,6 +28,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.Sql.Tests.Integration
                 threwException = true;
                 throw new Exception(ExceptionMessage);
             }
+            logger.LogInformation("SQL Changes: " + changes.Count);
             foreach (SqlChange<Product> change in changes)
             {
                 // The output is used to inspect the trigger binding parameter in test methods.
