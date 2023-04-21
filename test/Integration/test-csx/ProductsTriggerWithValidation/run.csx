@@ -18,6 +18,6 @@ public static void Run(IReadOnlyList<SqlChange<Product>> changes, ILogger log)
     foreach (SqlChange<Product> change in changes)
     {
         // The output is used to inspect the trigger binding parameter in test methods.
-        log.LogInformation("SQL Changes: " + Microsoft.Azure.WebJobs.Extensions.Sql.Utils.JsonSerializeObject(changes));
+        log.LogInformation("SQL Change: " + Microsoft.Azure.WebJobs.Extensions.Sql.Utils.JsonSerializeObject(change));
     }
 }
